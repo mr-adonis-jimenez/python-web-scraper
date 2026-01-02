@@ -1,46 +1,32 @@
-# 🕷️ Python Web Scraper
+🕷️ Python Web Scraper (Requests + BeautifulSoup)
 
-**Data Extraction · Automation · Structured Outputs**
+Lightweight, extensible web scraping framework built with Python and BeautifulSoup for structured data extraction.
 
-This project is a **modular Python web scraping system** designed to reliably extract, normalize, and export data from web sources for downstream analytics, reporting, or automation workflows.
+This project demonstrates classic scraping discipline—HTTP requests, HTML parsing, data validation, and export—implemented with modern Python practices and clean project structure.
 
-Built with old-school discipline (*respect the web, don’t break things*) and modern tooling, this scraper demonstrates how to turn unstructured web content into **clean, decision-ready datasets**.
+📌 Use Cases
 
----
+Lead generation & market research
 
-## 🎯 Project Objectives
+Competitive analysis
 
-This scraper is designed to answer one simple business question:
+Content aggregation
 
-> **How do we turn public web data into usable information—consistently and responsibly?**
+Portfolio / data engineering demos
 
-### Primary Goals
-- Automate data collection from web pages  
-- Parse and structure messy HTML into clean datasets  
-- Export data in analytics-friendly formats  
-- Handle failures gracefully (timeouts, retries, blocks)  
-- Remain extensible for future targets and pipelines  
+API-adjacent data ingestion pipelines
 
----
+🧱 Tech Stack
 
-## 🧠 Key Features
+Python 3.9+
 
-### HTTP-Based Scraping
-- Uses `requests` with realistic headers  
-- Avoids unnecessary browser overhead when possible  
+requests – HTTP client
 
-### HTML Parsing
-- Robust DOM parsing with **BeautifulSoup**  
-- Selector-based extraction for maintainability  
+beautifulsoup4 (bs4) – HTML parsing
 
-### Structured Output
-- Exports to **CSV** and **JSON**  
-- DataFrames ready for **BI**, **ML**, or **dashboards**  
+lxml – fast parser
 
-### Reliability Built In
-- Retry logic with exponential backoff  
-- Timeouts and error handling  
-- Polite request pacing  
+pandas (optional) – data normalization
 
----
+csv / json – export formats
 
