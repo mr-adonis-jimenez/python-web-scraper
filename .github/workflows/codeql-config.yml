@@ -2,3 +2,6 @@ paths-ignore:
   - tests/**
   - .github/**
   - docs/**
+
+- name: Claude Code Action Official
+- uses: anthropics/claude-code-action@v1
