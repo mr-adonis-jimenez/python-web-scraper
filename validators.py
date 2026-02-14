@@ -5,38 +5,44 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 try:
-    from pydantic import BaseModel, Field, HttpUrl, validator, ValidationError
+    from pydantic import (
+        BaseModel,
+        ConfigDict,
+        Field,
+        HttpUrl,
+        ValidationError,
+        field_validator,
+    )
     PYDANTIC_AVAILABLE = True
 except ImportError:
     PYDANTIC_AVAILABLE = False
     logging.warning("pydantic not available. Data validation disabled.")
-    
+
     # Fallback placeholder classes
-    class BaseModel:
+    class BaseModel:  # type: ignore[no-redef]
         pass
-    
-    class Field:
+
+    class Field:  # type: ignore[no-redef]
         @staticmethod
         def __call__(*args, **kwargs):
             return None
-    
-    HttpUrl = str
+
+    HttpUrl = str  # type: ignore[misc]
 
 
 class ScrapedDataModel(BaseModel):
     """Base model for scraped data with common fields."""
-    
+
+    model_config = ConfigDict(extra="allow", validate_assignment=True)
+
     url: HttpUrl = Field(..., description="Source URL")
     title: Optional[str] = Field(None, max_length=500)
     content: Optional[str] = Field(None)
     timestamp: datetime = Field(default_factory=datetime.now)
     metadata: Dict[str, Any] = Field(default_factory=dict)
-    
-    class Config:
-        extra = "allow"  # Allow additional fields
-        validate_assignment = True
-    
-    @validator('url')
+
+    @field_validator("url")
+    @classmethod
     def validate_url(cls, v):
         """Validate URL format."""
         if isinstance(v, str):
@@ -44,8 +50,9 @@ class ScrapedDataModel(BaseModel):
             if not all([parsed.scheme, parsed.netloc]):
                 raise ValueError("Invalid URL format")
         return v
-    
-    @validator('title')
+
+    @field_validator("title")
+    @classmethod
     def validate_title(cls, v):
         """Clean and validate title."""
         if v:
@@ -57,7 +64,7 @@ class ScrapedDataModel(BaseModel):
 
 class ProductModel(ScrapedDataModel):
     """Model for product data."""
-    
+
     name: str = Field(..., min_length=1, max_length=500)
     price: Optional[float] = Field(None, ge=0)
     currency: Optional[str] = Field(None, max_length=3)
@@ -67,8 +74,9 @@ class ProductModel(ScrapedDataModel):
     rating: Optional[float] = Field(None, ge=0, le=5)
     review_count: Optional[int] = Field(None, ge=0)
     sku: Optional[str] = None
-    
-    @validator('currency')
+
+    @field_validator("currency")
+    @classmethod
     def validate_currency(cls, v):
         """Validate currency code."""
         if v:
@@ -80,7 +88,7 @@ class ProductModel(ScrapedDataModel):
 
 class ArticleModel(ScrapedDataModel):
     """Model for article/news data."""
-    
+
     headline: str = Field(..., min_length=1)
     author: Optional[str] = None
     publish_date: Optional[datetime] = None
@@ -94,9 +102,9 @@ class ArticleModel(ScrapedDataModel):
 
 class ContactModel(ScrapedDataModel):
     """Model for contact information."""
-    
+
     name: Optional[str] = None
-    email: Optional[str] = Field(None, regex=r"[^@]+@[^@]+\.[^@]+")
+    email: Optional[str] = Field(None, pattern=r"[^@]+@[^@]+\.[^@]+")
     phone: Optional[str] = None
     address: Optional[str] = None
     company: Optional[str] = None

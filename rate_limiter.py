@@ -1,7 +1,7 @@
 """Rate limiter for respectful web scraping with configurable limits."""
 import time
 import logging
-from typing import Optional, Dict
+from typing import Any, Optional, Dict
 from collections import deque
 from threading import Lock
 from dataclasses import dataclass
@@ -142,7 +142,7 @@ class RateLimiter:
             
             return True
     
-    def get_stats(self) -> Dict[str, any]:
+    def get_stats(self) -> Dict[str, Any]:
         """Get rate limiter statistics.
         
         Returns:
